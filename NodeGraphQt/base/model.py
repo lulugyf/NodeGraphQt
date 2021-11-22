@@ -245,6 +245,7 @@ class NodeModel(object):
                     }
                 }
         """
+        # print('---', 'to_dict, _custom_prop=', self._custom_prop)
         node_dict = self.__dict__.copy()
         node_id = node_dict.pop('id')
 
@@ -297,6 +298,7 @@ class NodeModel(object):
                         to_remove.append(k)
 
             [custom_props.pop(k) for k in to_remove]
+            # print("---", "property removed", to_remove)
 
             node_dict['custom'] = custom_props
 

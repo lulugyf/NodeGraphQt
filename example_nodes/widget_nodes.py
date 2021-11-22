@@ -46,7 +46,6 @@ class TextInputNode(BaseNode):
         # create QLineEdit text input widget.
         self.add_text_input('my_input', 'Text Input', tab='widgets')
 
-
 class CheckboxNode(BaseNode):
     """
     An example of a node with 2 embedded QCheckBox widgets.

@@ -331,6 +331,8 @@ class NodeObject(object):
             value (object): property data (python built in types).
         """
 
+        c_prop = self.model.custom_properties
+        v_prev = self.get_property(name)
         # prevent signals from causing a infinite loop.
         try:
             if self.get_property(name) == value:
@@ -351,6 +353,10 @@ class NodeObject(object):
             if hasattr(self.view, name):
                 setattr(self.view, name, value)
             self.model.set_property(name, value)
+
+        if name in c_prop:
+            c_prop[name] = value
+            print(f'---set_property {self.type_}, {name} {self.model.custom_properties}, pre_val: [{v_prev}]')
 
     def has_property(self, name):
         """

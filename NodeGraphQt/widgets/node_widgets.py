@@ -297,7 +297,7 @@ class NodeLineEdit(NodeBaseWidget):
         ledit = QtWidgets.QLineEdit()
         ledit.setText(text)
         ledit.setStyleSheet(STYLE_QLINEEDIT)
-        ledit.setAlignment(QtCore.Qt.AlignCenter)
+        # ledit.setAlignment(QtCore.Qt.AlignCenter)
         ledit.editingFinished.connect(self.on_value_changed)
         ledit.clearFocus()
         self.set_custom_widget(ledit)

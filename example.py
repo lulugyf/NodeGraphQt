@@ -132,6 +132,20 @@ class MyNode(BaseNode):
         self.add_output('square port', painter_func=draw_square_port)
         self.add_output('triangle port', painter_func=draw_triangle_port)
 
+        self.add_text_input('prop1', 'prop1', tab='widgets')
+        self.add_float_input('prop2', 'prop2')
+
+    def on_input_connected(self, to_port, from_port):
+        """Override node callback method."""
+        print("--prop1", self.get_property('prop1') )
+        print("--prop2", self.get_property('prop2') )
+
+    def on_input_disconnected(self, to_port, from_port):
+        """Override node callback method."""
+        pass
+
+
+
 
 if __name__ == '__main__':
     QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
@@ -161,18 +175,32 @@ if __name__ == '__main__':
 
 
     # show the nodes list when a node is "double clicked" in the graph.
-    node_tree = NodeTreeWidget(node_graph=graph)
-    node_tree.setWindowFlags(QtCore.Qt.Tool | QtCore.Qt.Dialog | QtCore.Qt.WindowStaysOnTopHint)
-    def show_nodes_list(node):
-        if not node_tree.isVisible():
-            node_tree.update()
-            node_tree.show()
-    graph.node_double_clicked.connect(show_nodes_list)
+    # node_tree = NodeTreeWidget(node_graph=graph)
+    # node_tree.setWindowFlags(QtCore.Qt.Tool | QtCore.Qt.Dialog | QtCore.Qt.WindowStaysOnTopHint)
+    # def show_nodes_list(node):
+    #     if not node_tree.isVisible():
+    #         node_tree.update()
+    #         node_tree.show()
+    # graph.node_double_clicked.connect(show_nodes_list)
 
+    def my_init(p_in, p_out, props=[]):
+        def _func(self):
+            BaseNode.__init__(self)
+            for i in p_in:
+                self.add_input(i)
+            for i in p_out:
+                self.add_output(i)
+            for p in props:
+                self.add_text_input(p, p)
+
+        return _func
+
+    cls = type('abc', (BaseNode, object,),
+               {'__identifier__': 'guanyf', 'NODE_NAME': 'abc', '__init__': my_init(['in1', 'in2'], ['out5'], props=['text1', 'text2'])})
 
     # registered nodes.
     nodes_to_reg = [
-        BackdropNode, MyNode,
+        BackdropNode, MyNode, cls,
         basic_nodes.FooNode,
         basic_nodes.BarNode,
         widget_nodes.DropdownMenuNode,
@@ -180,6 +208,8 @@ if __name__ == '__main__':
         widget_nodes.CheckboxNode
     ]
     graph.register_nodes(nodes_to_reg)
+
+    graph.create_node('guanyf.abc')
 
     my_node = graph.create_node(
         'com.chantasticvfx.MyNode',
@@ -191,7 +221,7 @@ if __name__ == '__main__':
     foo_node = graph.create_node(
         'com.chantasticvfx.FooNode',
         name='node')
-    foo_node.set_disabled(True)
+    # foo_node.set_disabled(True)
 
     # create example "TextInputNode".
     text_node = graph.create_node(

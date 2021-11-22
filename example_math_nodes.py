@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from Qt import QtWidgets, QtCore
+from loguru import logger
 
 from NodeGraphQt import (NodeGraph,
                          PropertiesBinWidget,
@@ -24,6 +25,8 @@ if __name__ == '__main__':
     graph_widget = graph.widget
     graph_widget.resize(1100, 800)
     graph_widget.show()
+    
+    logger.info("hello")
 
     # show the properties bin when a node is "double clicked" in the graph.
     properties_bin = PropertiesBinWidget(node_graph=graph)
@@ -47,8 +50,8 @@ if __name__ == '__main__':
     [graph.register_node(n) for n in Nodes]
 
     # load preset session
-    # graph.load_session(join('example_nodes', 'networks', 'example.nodes'))
-    graph.load_session(join('example_nodes', 'networks', 'metanode_example.nodes'))
+    graph.load_session(join('example_nodes', 'networks', 'example.nodes'))
+    #graph.load_session(join('example_nodes', 'networks', 'metanode_example.nodes'))
 
     # update nodes
     update_nodes_by_down(graph.all_nodes())

@@ -25,6 +25,7 @@ from ..constants import (
     VIEWER_GRID_LINES
 )
 from ..widgets.node_space_bar import node_space_bar
+from ..widgets.node_widgets import NodeLineEdit
 from ..widgets.viewer import NodeViewer
 
 
@@ -1287,10 +1288,13 @@ class NodeGraph(QtCore.QObject):
         for n in nodes:
             if n is root_node:
                 continue
-            # update the node model.
-            n.update_model()
+            # update the node model (from property bin???).
+            # n.update_model()
 
             node_dict = n.model.to_dict
+            # if n.type_ == 'preprocess.ColsRemove':
+            #     x:BaseNode = n
+                # print('----', x.type_, x.name(), x.model.custom_properties)
 
             if isinstance(n, SubGraph):
                 published = n.get_property('published')
@@ -1370,7 +1374,12 @@ class NodeGraph(QtCore.QObject):
                         node.model.set_property(prop, n_data[prop])
                 # set custom properties.
                 for prop, val in n_data.get('custom', {}).items():
+                    # print('---load', node.NODE_NAME, prop, val)
                     node.model.set_property(prop, val)
+                    w = node.view.get_widget(prop)
+                    w.set_value(val)
+                    # if type(w) == NodeLineEdit:
+                    #     w.set_value(val)
 
                 nodes[n_id] = node
 
